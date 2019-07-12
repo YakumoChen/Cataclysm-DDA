@@ -77,11 +77,12 @@ void player_activity::do_turn( player &p )
     type->call_do_turn( this, &p );
 
     // Activities should never excessively drain stamina.
-    if( previous_stamina < p.stamina && p.stamina < p.get_stamina_max() / 3 ) {
+    if( p.stamina < previous_stamina && p.stamina < p.get_stamina_max() / 3 ) {
         if( one_in( 50 ) ) {
             p.add_msg_if_player( _( "You pause for a moment to catch your breath." ) );
         }
-        player_activity new_act( activity_id( "ACT_WAIT_STAMINA" ), to_moves<int>( 1_minutes ), 0 );
+        player_activity new_act( activity_id( "ACT_WAIT_STAMINA" ), to_moves<int>( 1_minutes ),
+                                 p.get_stamina_max() / 3 );
         p.assign_activity( new_act );
         return;
     }
